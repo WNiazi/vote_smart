@@ -8,7 +8,7 @@ import pickle
 
 cid_list = []
 
-with open('/Users/timmy the man/Desktop/Project VoteSmart/filtered_all_candiate.csv',  encoding='utf-8-sig') as f:
+with open('/Users/timmy the man/Desktop/Project VoteSmart/subset_file.csv',  encoding='utf-8-sig') as f:
     csv_file_data = csv.reader(f)
     for row in csv_file_data:
         cid_list.append(row[0])
@@ -34,18 +34,5 @@ for cycle in ['2012', '2014', '2016', '2018', '2020', '2022', '']:
 pprint(cid_cycle_data)
 
 
-with open('my_pickled_file', 'wb') as f:
+with open('my_practice_pickled_file', 'wb') as f:
     pickle.dump(cid_cycle_data, f)
-
-
-# def get_cand_info(cid_list):
-#cand_info = []
-# if cid_list is not None:
-#  for each_cid in cid_list:
-#     each_cand_info = o.get_candidate_summary(each_cid)
-#    pprint(each_cand_info)
-#   cand_info.append(each_cand_info)
-
-
-# for each_cid in temp:
-#  pprint(o.get_legislators(each_cid))
