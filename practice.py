@@ -4,6 +4,7 @@ import csv
 from opensecrets_api import OpenSecrets
 from pprint import pprint
 import pickle
+from candidate import Candidate
 
 
 cid_list = []
@@ -16,23 +17,38 @@ with open('/Users/timmy the man/Desktop/Project VoteSmart/subset_file.csv',  enc
 o = OpenSecrets(key.API_KEY)
 
 
-cid_cycle_data = {}
+candidates = []
 
-for cycle in ['2012', '2014', '2016', '2018', '2020', '2022', '']:
-    for cid in cid_list:
+for cid in cid_list:
+    raw_data = {}
+    for cycle in ['2012', '2014', '2016', '2018', '2020', '2022']:
         try:
-            cand_infor = o.get_candidate_summary(cid, cycle=cycle)
-            cand_contributors = o.get_candidate_contributors(cid, cycle=cycle)
-            if cid not in cid_cycle_data:
-                cid_cycle_data[cid] = None
-            print("appending data")
-            cid_cycle_data[cid][cycle] = cand_infor
+            api_result = o.get_candidate_summary(cid, cycle=cycle)
+            raw_data[cycle] = api_result
+            print("appending data " + cid + ' '+cycle)
 
-        except:
+        except TypeError:
             print("Not found " + cid)
-            #not_found_cid.append (each_cid)
-pprint(cid_cycle_data)
+
+        pprint(raw_data)
+
+    try:
+        candidate = Candidate(cid=cid,
+                              name=raw_data['2022']['cand_name'],
+                              cycle=raw_data.keys(),
+                              state=raw_data['2022']['state'],
+                              party=raw_data['2022']['party'],
+                              chamber=raw_data['2022']['chamber'])
+
+        candidates.append(candidate)
+
+    except KeyError:
+        pass
+
+
+for candidate in candidates:
+    pprint(candidate)
 
 
 with open('my_practice_pickled_file', 'wb') as f:
-    pickle.dump(cid_cycle_data, f)
+    pickle.dump(candidates, f)
