@@ -12,7 +12,11 @@ class Candidate:
         self.contribution = []
 
     def __str__(self) -> str:
-        return self.cid + ' ' + self.name
+        if self.cid and self.name and self.state and self.party and self.chamber:
+            return self.cid + ' ' + self.name
+        else:
+            return "Unknown"
 
     def __repr__(self) -> str:
-        return self.cid + ' ' + self.name
+        return "Candidate(cid={}, name={}, cycle={}, state={}, party={}, chamber={}".format(
+            self.cid, self.name, self.cycle, self.state, self.party, self.chamber)

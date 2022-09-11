@@ -18,10 +18,11 @@ o = OpenSecrets(key.API_KEY)
 
 
 candidates = []
+cycles = ['2022', '2020', '2018', '2016', '2014', '2012']
 
 for cid in cid_list:
     raw_data = {}
-    for cycle in ['2012', '2014', '2016', '2018', '2020', '2022']:
+    for cycle in cycles:
         try:
             api_result = o.get_candidate_summary(cid, cycle=cycle)
             raw_data[cycle] = api_result
@@ -32,18 +33,54 @@ for cid in cid_list:
 
         pprint(raw_data)
 
-    try:
-        candidate = Candidate(cid=cid,
-                              name=raw_data['2022']['cand_name'],
-                              cycle=raw_data.keys(),
-                              state=raw_data['2022']['state'],
-                              party=raw_data['2022']['party'],
-                              chamber=raw_data['2022']['chamber'])
+    # Name: most recent
+    name = None
+    for cycle in cycles:
+        try:
+            name = raw_data['cycle']['cand_name']
+        except KeyError:
+            print("Name not found in " + cycle + " cycle")
+        if name:
+            break
 
-        candidates.append(candidate)
+    # State: list of all states
+    state = []
+    for cycle in cycles:
+        try:
+            state_per_cycle = raw_data['cycle']['state']
+        except KeyError:
+            print("no state found in the " + cycle + " cycle")
+            continue
+        state.append(state_per_cycle)
 
-    except KeyError:
-        pass
+    # Party: dictionary Year/Party
+    party = {}
+    for cycle in cycles:
+        try:
+            party_per_cycle = raw_data['cycle']['party']
+        except KeyError:
+            print("no party found in the " + cycle + " cycle")
+            continue
+        party[cycle] = party_per_cycle
+
+    # chamber: dictionary Year/Chamber
+    chamber = {}
+    for cycle in cycles:
+        try:
+            chamber_per_cycle = raw_data['cycle']['chamber']
+        except KeyError:
+            print("no chamber found in the " + cycle + " cycle")
+            continue
+        chamber[cycle] = chamber_per_cycle
+
+    candidate = Candidate(cid=cid,
+                          name=name,
+                          cycle=list(raw_data.keys()),
+                          state=state,  # List
+                          party=party,
+                          chamber=chamber)
+
+    candidates.append(candidate)
 
 
 for candidate in candidates:
