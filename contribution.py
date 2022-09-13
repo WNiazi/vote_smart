@@ -1,8 +1,7 @@
 
 
-class Contributions:
-    def __init__(self, cid, org_name, total, individual, pacs,  source='https://www.opensecrets.org'):
-        self.cid = cid
+class Contribution:
+    def __init__(self, org_name, total, individual, pacs,  source='https://www.opensecrets.org'):
         self.org_name = org_name
         self.total = total
         self.pacs = pacs
@@ -10,13 +9,13 @@ class Contributions:
         self.source = source
 
     def __str__(self) -> str:
-        if self.cid and self.org_name:
-            return self.cid + ' ' + self.org_name
+        if self.org_name:
+            return self.org_name
         else:
             return "Unknown"
 
     def __repr__(self) -> str:
-        return "Candidate Contributors (cid ={}, org_name={}, total ={}, pac ={}, individual ={})".format(self.cid, self.org_name, self.total, self.pacs, self.individual)
+        return "Contribution( org_name={}, total ={}, pac ={}, individual ={})".format(self.org_name, self.total, self.pacs, self.individual)
 
 
 #cand_contribution = o.get_candidate_contributors('N00044245')

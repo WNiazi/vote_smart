@@ -18,5 +18,5 @@ class Candidate:
             return "Unknown"
 
     def __repr__(self) -> str:
-        return "Candidate(cid={}, name={}, cycle={}, state={}, party={}, chamber={}".format(
+        return "Candidate(cid={}, name={}, cycle={}, state={}, party={}, chamber={})".format(
             self.cid, self.name, self.cycle, self.state, self.party, self.chamber)

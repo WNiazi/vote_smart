@@ -5,6 +5,7 @@ from opensecrets_api import OpenSecrets
 from pprint import pprint
 import pickle
 from candidate import Candidate
+from contribution import Contribution
 
 
 cid_list = []
@@ -25,7 +26,9 @@ for cid in cid_list:
     for cycle in cycles:
         try:
             api_result = o.get_candidate_summary(cid, cycle=cycle)
+            cand_contribution = o.get_candidate_contributors(cid, cycle=cycle)
             raw_data[cycle] = api_result
+            raw_data[cycle]['contributions'] = cand_contribution
             print("appending data " + cid + ' '+cycle)
 
         except TypeError:
@@ -37,17 +40,20 @@ for cid in cid_list:
     name = None
     for cycle in cycles:
         try:
-            name = raw_data['cycle']['cand_name']
+            name = raw_data[cycle]['cand_name']
+
         except KeyError:
             print("Name not found in " + cycle + " cycle")
         if name:
             break
+    if name:
+        print("Name: " + name)
 
     # State: list of all states
     state = []
     for cycle in cycles:
         try:
-            state_per_cycle = raw_data['cycle']['state']
+            state_per_cycle = raw_data[cycle]['state']
         except KeyError:
             print("no state found in the " + cycle + " cycle")
             continue
@@ -57,7 +63,7 @@ for cid in cid_list:
     party = {}
     for cycle in cycles:
         try:
-            party_per_cycle = raw_data['cycle']['party']
+            party_per_cycle = raw_data[cycle]['party']
         except KeyError:
             print("no party found in the " + cycle + " cycle")
             continue
@@ -67,11 +73,36 @@ for cid in cid_list:
     chamber = {}
     for cycle in cycles:
         try:
-            chamber_per_cycle = raw_data['cycle']['chamber']
+            chamber_per_cycle = raw_data[cycle]['chamber']
         except KeyError:
             print("no chamber found in the " + cycle + " cycle")
             continue
         chamber[cycle] = chamber_per_cycle
+
+    # contirbutions: dictionary of lists, per cycle
+    contributions = {}
+    for cycle in cycles:
+        contributions_per_cycle = []
+        try:
+            raw_contributions_per_cycle = raw_data[cycle]['contributions']
+            raw_contributions_per_cycle = [
+                x for x in raw_contributions_per_cycle if '@attributes' in x]
+            print(type(raw_contributions_per_cycle))
+            pprint(raw_contributions_per_cycle)
+
+            for contribution in raw_contributions_per_cycle:
+                org_name = contribution['@attributes']['org_name']
+                total = contribution['@attributes']['total']
+                pacs = contribution['@attributes']['pacs']
+                indivs = contribution['@attributes']['indivs']
+
+                contributions_per_cycle.append(Contribution(
+                    org_name=org_name, total=total, pacs=pacs, individual=indivs))
+
+        except KeyError:
+            print("no contributions found in the " + cycle + " cycle")
+            continue
+        contributions[cycle] = contributions_per_cycle
 
     candidate = Candidate(cid=cid,
                           name=name,
