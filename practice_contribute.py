@@ -7,6 +7,7 @@ from pprint import pprint
 import pickle
 from candidate import Candidate
 from contribution import Contribution
+import pandas as pd
 
 
 cid_list = []
@@ -19,11 +20,11 @@ with open('/Users/timmy the man/Desktop/Project VoteSmart/subset_file.csv',  enc
 o = OpenSecrets(key.API_KEY)
 
 
-candidates = []
+contribution_candidate = []
 cycles = ['2022', '2020', '2018', '2016', '2014', '2012']
-
+raw_data = []
 for cid in cid_list:
-    raw_data = []
+
     for cycle in cycles:
         try:
             cand_contribution = o.get_candidate_contributors(cid, cycle=cycle)
@@ -48,26 +49,31 @@ for cid in cid_list:
             raw_data.append(Contribution(org_name=org_name,
                                          total=total, pacs=pacs, individual=indivs))
             # pprint(raw_data)
-
-# [Contribution(org_name=Service Employees International Union, total=15000, pac=15000, individual=0),
-# Contribution(org_name=American Assn for Justice, total=15000, pac=15000, individual=0)]
+            # [Contribution(org_name=Service Employees International Union, total=15000, pac=15000, individual=0),
+            # Contribution(org_name=American Assn for Justice, total=15000, pac=15000, individual=0)]
 
         except TypeError:
             print("Not found " + cid)
 
-# pick :100, to run
-# for contributions in raw_data:
-   # pprint(contributions)
+pprint(raw_data)
+# []
+
+cvsheader = ['ORGNAME', 'TOTAL', 'PACS', 'INDIV']
+
+with open('contribution_final.csv', 'w', encoding='UTF8', newline='') as f:
+    writer = csv.writer(f)
+    writer.writerow(cvsheader)
+
+    writer.writerow(raw_data[Contribution])
+
 
 # pickling (store object in binary); wb is write binary
-with open('my_practice_pickled_contribution_file', 'wb') as f:
-    pickle.dump(raw_data, f)
-
+# with open('my_practice_pickled_contribution_file', 'wb') as f:
+#  pickle.dump(raw_data, f)
+# f.close()
 
 # unpickling/deserialization returns to python object; read binary =rb
-unpic = open('my_practice_pickled_contribution_file', 'rb')
-m = pickle.load(unpic)
-print(m)
-unpic.close()
-
-# changing it to csv file
+#unpic = open( 'rb')
+#raw_data = pickle.load(unpic)
+# print(raw_data)
+# unpic.close()
