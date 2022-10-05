@@ -27,17 +27,15 @@ for cid in cid_list:
     for cycle in cycles:
         try:
             api_result = o.get_candidate_summary(cid, cycle=cycle)
+            raw_data[cycle] = api_result
         except TypeError:
             print("Not found " + cid)
-
-        # pprint(raw_data)
 
     # Name: most recent
     name = None
     for cycle in cycles:
         try:
             name = raw_data[cycle]['cand_name']
-
         except KeyError:
             print("Name not found in " + cycle + " cycle")
         if name:
@@ -75,32 +73,6 @@ for cid in cid_list:
             continue
         chamber[cycle] = chamber_per_cycle
 
-    # contributions: dictionary of lists, per cycle
-    contributions = {}
-    for cycle in cycles:
-        contributions_per_cycle = []
-        try:
-            cand_contribution = o.get_candidate_contributors(cid, cycle=cycle)
-            raw_contributions_per_cycle = cand_contribution[0]
-           # pprint(type(raw_contributions_per_cycle))
-            org_name = raw_contributions_per_cycle['@attributes']['org_name']
-            # print(org_name)
-            total = raw_contributions_per_cycle['@attributes']['total']
-            # print(total)
-            pacs = raw_contributions_per_cycle['@attributes']['pacs']
-            # print(pacs)
-            individual = raw_contributions_per_cycle['@attributes']['indivs']
-            # print(individual)
-
-        except KeyError:
-            print("no contributions found in the " + cycle + " cycle")
-            continue
-
-        # contributions.update(contributions_per_cycle)
-    contributions_per_cycle = Contribution(
-        org_name=org_name, total=total, pacs=pacs, individual=individual)
-    pprint(contributions_per_cycle)
-
     candidate = Candidate(cid=cid,
                           name=name,
                           cycle=list(raw_data.keys()),
@@ -114,8 +86,12 @@ for cid in cid_list:
 for candidate in candidates:
     pprint(candidate)
 
-for each_contribution in contributions:
-    pprint(each_contribution)
 
 with open('my_practice_pickled_file', 'wb') as f:
     pickle.dump(candidates, f)
+
+
+# Candidate(cid=N00000010, name=Burton, Dan, cycle=['2022', '2020', '2018', '2016', '2014', '2012'], state=['', '', '', '', '', 'IN'], party={'2022': 'R', '2020': 'R', '2018': 'R', '2016': 'R', '2014': 'R', '2012': 'R'}, chamber={'2022': '', '2020': '', '2018': '', '2016': '', '2014': '', '2012': 'H'})
+#Candidate(cid=N00000011, name=None, cycle=[], state=[], party={}, chamber={})
+# Candidate(cid=N00000019, name=Clinton, Hillary, cycle=['2022', '2020', '2018', '2016', '2014', '2012'], state=['', '', '', 'NY', '', ''], party={'2022': 'D', '2020': 'D', '2018': 'D', '2016': 'D', '2014': 'D', '2012': 'D'}, chamber={'2022': '', '2020': '', '2018': '', '2016': 'Pres', '2014': '', '2012': ''})
+# Candidate(cid=N00000036, name=Feingold, Russ, cycle=['2020', '2018', '2016', '2014', '2012'], state=['', '', '', '', ''], party={'2020': 'D', '2018': 'D', '2016': 'D', '2014': 'D', '2012': 'D'}, chamber={'2020': '', '2018': '', '2016': '', '2014': '', '2012': ''})

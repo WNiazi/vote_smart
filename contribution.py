@@ -1,7 +1,7 @@
-
-
 class Contribution:
-    def __init__(self, org_name, total, individual, pacs,  source='https://www.opensecrets.org'):
+    def __init__(self, cid, cycle, org_name, total, individual, pacs, source='https://www.opensecrets.org'):
+        self.cid = cid
+        self.cycle = cycle
         self.org_name = org_name
         self.total = total
         self.pacs = pacs
@@ -15,7 +15,7 @@ class Contribution:
             return "Unknown"
 
     def __repr__(self) -> str:
-        return "Contribution( org_name={}, total ={}, pac ={}, individual ={})".format(self.org_name, self.total, self.pacs, self.individual)
+        return "Contribution(cid ={}, org_name={}, total ={}, pac ={}, individual ={})".format(self.cid, self.org_name, self.total, self.pacs, self.individual)
 
 
 #cand_contribution = o.get_candidate_contributors('N00044245')
