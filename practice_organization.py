@@ -5,6 +5,7 @@ from pprint import pprint
 
 
 o = OpenSecrets(key.API_KEY)
+
 get_organization = o.get_organizations('Brett Robinson Real Estate')
 # print(get_organization){'@attributes': {'orgid': 'D000092409', 'orgname': 'Brett Robinson Real Estate'}}
 get_organization_summary = o.get_organization_summary('D000092409')
