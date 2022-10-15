@@ -2,9 +2,14 @@ import key
 import csv
 from opensecrets_api import OpenSecrets
 from pprint import pprint
+import practice_contribute
 
 
 o = OpenSecrets(key.API_KEY)
+
+sorted = practice_contribute.org_name_list
+print(sorted)
+
 
 get_organization = o.get_organizations('Brett Robinson Real Estate')
 # print(get_organization){'@attributes': {'orgid': 'D000092409', 'orgname': 'Brett Robinson Real Estate'}}

@@ -1,12 +1,8 @@
-import requests
 import key
 import csv
 from opensecrets_api import OpenSecrets
 from pprint import pprint
-import pickle
-from candidate import Candidate
 from contribution import Contribution
-import pandas as pd
 
 
 cid_list = []
@@ -19,48 +15,56 @@ with open('/Users/timmy the man/Desktop/Project VoteSmart/subset_file.csv',  enc
 
 o = OpenSecrets(key.API_KEY)
 
-raw_data = {}
-almost_final_contributions = []
-org_name = []
+
 total_cand_contribution_information = []
-information_per_year_candidate = []
 cycles = ['2022', '2020', '2018', '2016', '2014', '2012']
+information_dict_candidate = {}
+
+org_name_list = []
+
 for cid in cid_list:
+    raw_data = {}
     for cycle in cycles:
         try:
             cand_contribution = o.get_candidate_contributors(cid, cycle=cycle)
             raw_data[cycle] = cand_contribution
         except TypeError:
             print("not found " + cid)
-   # information_dict_candidate = {}
+    # pprint(raw_data)
+
+    atts_list = []
     for cycle in cycles:
         try:
-            index_contribution = raw_data[cycle][0]
-            index = 0
-            while index < len(index_contribution):
-                for key in index_contribution[index]:
-                    information_per_candidate = index_contribution[index][key]
-                    #information_dict_candidate[cycle] = information_per_candidate
+            (contribution_list, stuff) = raw_data[cycle]
+            if not isinstance(contribution_list, list):
+                contribution_list = [contribution_list]
 
-                    org_name_per_cycle = information_per_candidate['org_name']
-                    information_per_year_candidate.append(
-                        information_per_candidate)
-                    index += 1
+            for for_atts in contribution_list:
+                att = for_atts.get('@attributes')
+                att_org_name = att.get('org_name')
+                att['cycle'] = cycle
+                atts_list.append(att)
+                org_name_list.append(att_org_name)
+
+            contribution = Contribution(
+                cid=cid, cycle=cycle, contributions=atts_list)
+
+            total_cand_contribution_information.append(contribution)
+
         except KeyError:
             print("no contributions was found " + cid + " " + cycle + " cycle")
-            continue
-       # org_name.append(org_names)
-        total_cand_contribution_information.append(
-            information_per_year_candidate)
-        # print(total_cand_contribution_information)
 
 
-contributions = Contribution(cid=cid, cycle=list(
-    raw_data.keys()), org_name=org_name, information=total_cand_contribution_information)
+cvsheader = ['CID', 'CYCLE', 'NAME', 'INDVIS',
+             'ORG_NAME', 'PACS', 'TOTAL', 'SOURCE']
+# write mode =w; # file object =f , creating new object
 
-almost_final_contributions.append(contributions)
+with open('contrib.csv', 'w', encoding='UTF8', newline='') as f:
+    writer = csv.writer(f)
+    writer.writerow(cvsheader)
+    for con in total_cand_contribution_information:
+        con_rows = con.get_contribution_rows()
+        for row in con_rows:
+            writer.writerow(row)
 
-# for contribution in almost_final_contributions:
-#   pprint(contribution)
-
-#Issue now is the Class Contribution is not providing cycle/cid numbers #
+f.close()
