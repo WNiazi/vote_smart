@@ -55,7 +55,7 @@ for cid in cid_list:
             print("no contributions was found " + cid + " " + cycle + " cycle")
 
 
-cvsheader = ['CID', 'CYCLE', 'NAME', 'INDVIS',
+cvsheader = ['CID', 'CYCLE', 'INDVIS',
              'ORG_NAME', 'PACS', 'TOTAL', 'SOURCE']
 # write mode =w; # file object =f , creating new object
 

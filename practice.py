@@ -84,17 +84,6 @@ for cid in cid_list:
     candidates.append(candidate)
 # pprint(candidates)
 
-# [Candidate(cid=N00000010, name=Burton, Dan, cycle=['2022', '2020', '2018', '2016', '2014', '2012'], state=['', '', '', '', '', 'IN'], party={'2022': 'R', '2020': 'R', '2018': 'R', '2016': 'R', '2014': 'R', '2012': 'R'}, chamber={'2022': '', '2020': '', '2018': '', '2016': '', '2014': '', '2012': 'H'}),
-# Candidate(cid=N00000011, name=None, cycle=[], state=[], party={}, chamber={}),
-# Candidate(cid=N00000019, name=Clinton, Hillary, cycle=['2022', '2020', '2018', '2016', '2014', '2012'], state=['', '', '', 'NY', '', ''], party={'2022': 'D', '2020': 'D', '2018': 'D', '2016': 'D', '2014': 'D', '2012': 'D'}, chamber={'2022': '', '2020': '', '2018': '', '2016': 'Pres', '2014': '', '2012': ''}),
-# Candidate(cid=N00000036, name=Feingold, Russ, cycle=['2020', '2018', '2016', '2014', '2012'], state=['', '', '', '', ''], party={'2020': 'D', '2018': 'D', '2016': 'D', '2014': 'D', '2012': 'D'}, chamber={'2020': '', '2018': '', '2016': '', '2014': '', '2012': ''}),
-# Candidate(cid=N00000039, name=None, cycle=[], state=[], party={}, chamber={}),
-#Candidate(cid=N00000048, name=None, cycle=[], state=[], party={}, chamber={}),
-#Candidate(cid=N00000067, name=None, cycle=[], state=[], party={}, chamber={}),
-# Candidate(cid=N00000078, name=Maloney, Carolyn, cycle=['2022', '2020', '2018', '2016', '2014', '2012'], state=['NY', 'NY', 'NY', 'NY', 'NY', 'NY'], party={'2022': 'D', '2020': 'D', '2018': 'D', '2016': 'D', '2014': 'D', '2012': 'D'}, chamber={'2022': 'H', '2020': 'H', '2018': 'H', '2016': 'H', '2014': 'H', '2012': 'H'}),
-# Candidate(cid=N00000086, name=None, cycle=[], state=[], party={}, chamber={})]
-
-
 cvsheader = ['CID',  'NAME', 'CYCLE', 'STATE', 'PARTY', 'CHAMBER', 'SOURCE']
 # write mode =w; # file object =f , creating new object
 
@@ -107,10 +96,3 @@ with open('cand.csv', 'w', encoding='UTF8', newline='') as f:
             writer.writerow(row)
 
 f.close()
-# with open('my_practice_pickled_file', 'wb') as f:
-#    pickle.dump(candidate, f)
-
-# with open("my_practice_pickled_file", "rb") as f:
-#    object = pickle.load(f)
-#    df = pd.DataFrame(eval(object))
-#    df.to_csv('file.csv')
