@@ -2,13 +2,18 @@ import key
 from opensecrets_api import OpenSecrets
 from pprint import pprint
 from organization import Organization
-import practice_contribute
 import csv
+import organization
 
 
 o = OpenSecrets(key.API_KEY)
 
-listoforg = practice_contribute.org_name_list
+listoforg = []
+with open('contribs.csv',  encoding='utf-8-sig') as f:
+    csv_file_data = csv.reader(f)
+    for row in csv_file_data:
+        listoforg.append(row[3])
+
 listoforg = list(set(listoforg))
 
 data = []
@@ -40,16 +45,14 @@ for each_orgid in orgid:
 
     total_organization.append(organization)
 
+# pprint(total_organization)
+
 cvsheader = ['CYCLE', 'ORGID', 'ORGNAME', 'TOTAL', 'INDIVS', 'PACS', 'SOFT', 'TOT527', 'DEMS', 'REPUBS',
              'LOBBYING', 'OUTSIDE', 'MEMS_INVESTED', 'GAVE_TO_PAC', 'GAVE_TO_PARTY', 'GAVE_TO_527', 'GAVE_TO_CAND', 'SOURCE']
 # write mode =w; # file object =f , creating new object
 
-with open('organization.csv', 'w', encoding='UTF8', newline='') as f:
+with open('organs.csv', 'w', encoding='UTF8', newline='') as f:
     writer = csv.writer(f)
     writer.writerow(cvsheader)
     for org in total_organization:
-        org_rows = org.get_organization_rows()
-        for row in org_rows:
-            writer.writerow(row)
-
-f.close()
+        writer.writerow(org.get_organization_row())

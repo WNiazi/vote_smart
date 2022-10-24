@@ -13,7 +13,6 @@ class Candidate:
         self.party = party
         self.chamber = chamber
         self.source = source
-        self.contribution = []
 
     def __str__(self) -> str:
         if self.cid and self.name and self.state and self.party and self.chamber:

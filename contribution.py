@@ -1,5 +1,3 @@
-from importlib.metadata import packages_distributions
-
 
 class Contribution:
     def __init__(self, cid, cycle, contributions, source='https://www.opensecrets.org'):
@@ -15,7 +13,7 @@ class Contribution:
             return "Unknown"
 
     def __repr__(self) -> str:
-        return "Contribution(cid ={}, cycle ={})".format(self.cid, self.cycle,)
+        return "Contribution(cid ={}, cycle ={})".format(self.cid, self.cycle, self.contributions)
 
     def get_contribution_rows(self):
         rows = []
